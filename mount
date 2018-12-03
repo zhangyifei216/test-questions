@@ -1,0 +1,105 @@
+import React from 'react';
+import {Provider} from 'react-redux';
+import {expect} from 'chai';
+import {mount} from 'enzyme';
+import configureStore from 'redux-mock-store';
+import InitiateGemsIdForm from '../../../source/container/MDMRequest/InitiateGemsIdForm';
+import onBoardingJsons from '../OnBoardingJson';
+const mockStore = configureStore();
+const initialState = {
+  CDT_COMPONENT_DATA: {
+    LGL_S_TYPEData: onBoardingJsons.CNTRYData
+  }
+};
+describe('rendering InitiateGemsIdForm component', () => {
+  it('iniate component', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    expect(wrapper).to.exist;
+  });
+
+  it('onCancel function', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.context.router = {
+      pop: () => {}
+    };
+    wrapper.find('InitGemsIdForm').node.onCancel();
+  });
+
+  it('handleFieldChange function', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    const name = 'entityIndicator';
+    const value = 'BROKER';
+    wrapper.find('InitGemsIdForm').node.handleFieldChange(name, value);
+    expect(wrapper.find('InitGemsIdForm').node.state.marketIdentifierFlag).to.be.true;
+    expect(wrapper.find('InitGemsIdForm').node.state.futureDateFlag).to.be.false;
+  });
+
+  it('handleAdd function docNum less than 3', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.state.docNum = 2;
+    wrapper.find('InitGemsIdForm').node.handleAdd();
+    expect(wrapper.find('InitGemsIdForm').node.state.docNum).to.equal(3);
+  });
+
+  it('handleRemove function', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.handleRemove();
+    expect(wrapper.find('InitGemsIdForm').node.state.docNum).to.equal(0);
+  });
+
+  it('handleChange function', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.handleChange();
+  });
+
+  it('handleCancel function', () => {
+    const store = mockStore(initialState);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.handleCancel();
+    expect(wrapper.find('InitGemsIdForm').node.state.marketIdentifierFlag).to.be.false;
+    expect(wrapper.find('InitGemsIdForm').node.state.commentsFlag).to.be.false;
+    expect(wrapper.find('InitGemsIdForm').node.state.futureDateFlag).to.be.false;
+    expect(wrapper.find('InitGemsIdForm').node.state.leiFlag).to.be.false;
+    expect(wrapper.find('InitGemsIdForm').node.state.uploadDocumentFlag).to.be.true;
+    expect(wrapper.find('InitGemsIdForm').node.state.enableSubmit).to.be.false;
+    expect(wrapper.find('InitGemsIdForm').node.state.docNum).to.equal(1);
+  });
+
+  it('handleFutureDateChange function', () => {
+    const store = mockStore(initialState);
+    const wrapper = mount(
+      <Provider store={store}>
+        <InitiateGemsIdForm />
+      </Provider>);
+    wrapper.find('InitGemsIdForm').node.handleFutureDateChange();
+  });
+});
