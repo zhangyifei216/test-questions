@@ -1,0 +1,134 @@
+var validateInitiateGemsId = require('../../../source/container/MDMRequest/validateInitiateGemsId');
+var assert = require('assert');
+
+describe('rendering validateInitiateGemsId component', () => {
+  it('validate check', () => {
+    const values = {
+      legalEntityName: '',
+      domicileOfIncorporation: '',
+      entityClass: '',
+      lei: 'Incorporation',
+      entityIndicator: '',
+      marketIdentifier: '',
+      futureDatedLaunchDate: '',
+    };
+    const error = {
+      legalEntityName: ' This is a required field',
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      lei: ' LEI should be 20 characters',
+      entityIndicator: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate entityIndicator check', () => {
+    const values = {
+      entityIndicator: '',
+    };
+    const error = {
+      legalEntityName: ' This is a required field',
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      entityIndicator: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate futureDatedLaunchDate check', () => {
+    const values = {
+      entityIndicator: 'FDF',
+      futureDatedLaunchDate: '',
+    };
+    const error = {
+      legalEntityName: ' This is a required field',
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      futureDatedLaunchDate: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate marketIdentifier check', () => {
+    const values = {
+      entityIndicator: 'BROKER',
+      marketIdentifier: '',
+    };
+    const error = {
+      legalEntityName: ' This is a required field',
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      marketIdentifier: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('undefined values check', () => {
+    const values = undefined;
+    const error = {};
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate documents check', () => {
+    const values = {
+      documents: []
+    };
+    const error = {
+      legalEntityName: ' This is a required field',
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      entityIndicator: ' This is a required field',
+      documents: [],
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate documents name check', () => {
+    const values = {
+      documents: [{
+        document: [
+          {
+            name: 'test.csv'
+          }
+        ]
+      }]
+    };
+    const error = {
+      documents: [{
+        documentType: ' This is a required field',
+        documentSubcategory: ' This is a required field',
+        documentCategory: ' This is a required field',
+      }],
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      entityIndicator: ' This is a required field',
+      legalEntityName: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+
+  it('validate documents name format check', () => {
+    const values = {
+      documents: [{
+        document: [
+          {
+            name: 'test.qwe'
+          }
+        ]
+      }]
+    };
+    const error = {
+      documents: [{
+        documentType: ' This is a required field',
+        documentSubcategory: ' This is a required field',
+        documentCategory: ' This is a required field',
+        document: 'Please select a valid file format (CSV, DOC, DOCX, PDF, PPT, PPTX, TXT, XLS, XLSX)'
+      }],
+      domicileOfIncorporation: ' This is a required field',
+      entityClass: ' This is a required field',
+      entityIndicator: ' This is a required field',
+      legalEntityName: ' This is a required field',
+    };
+    assert.deepEqual(validateInitiateGemsId(values), error);
+  });
+});
